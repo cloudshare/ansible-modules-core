@@ -1,5 +1,5 @@
 #!powershell
-# (c) 2014, Matt Martz <matt@sivel.net>, and others
+# (c) 2015, Matt Martz <matt@sivel.net>, Tal Auslander <tal@cloudshare.com> and others
 #
 # This file is part of Ansible
 #
@@ -29,15 +29,15 @@ If (-not $params.path.GetType)
     Fail-Json $result "missing required arguments: path"
 }
 
-$extra_args = ""
+$extra_args = "";
 If ($params.extra_args.GetType)
 {
     $extra_args = $params.extra_args;
 }
 
-If ($params.creates.GetType -and $params.state.GetType -and $params.state -ne "absent")
+If ($params.creates.GetType -and -not ($params.state.GetType -and $params.state -eq "absent"))
 {
-    If (Test-File $creates)
+    If (Test-Path $params.creates)
     {
         Exit-Json $result;
     }
